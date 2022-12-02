@@ -77,7 +77,8 @@ public class AuthSecurityConfig {
 	}
 	
 	@Bean
-    public WebSecurityCustomizer ignoredPaths() {
-        return web -> web.ignoring().antMatchers("/register", "/authenticate");
-    }
+	public WebSecurityCustomizer ignoredPaths() {
+		return web -> web.ignoring().antMatchers("/register-page", "/authenticate-page", "/checkout-page", "/register",
+				"/login", "/favicon.ico", "/authenticate");
+	}
 }

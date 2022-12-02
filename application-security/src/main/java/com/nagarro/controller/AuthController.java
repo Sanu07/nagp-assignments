@@ -85,11 +85,18 @@ public class AuthController {
 		User user = new User();
 		BeanUtils.copyProperties(userDTO, user);
 		user.setUserName(userDTO.getFullName().substring(0, 2).toUpperCase() + userDTO.getPhone());
+		user.setImageFilePath("default/s3/location");
 		User savedUser = userDetailsService.save(user);
 		log.info("User created with id [{}]", savedUser.getId());
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	@PostMapping("/access")
+	public ResponseEntity<String> getAccess(@RequestBody String name) {
+		log.info("Hey {}!!! You got access to checkout any order");
+		return ResponseEntity.ok("Hey " + name + "!!! You got access to checkout any order");
+	}
+	
 	private void authenticate(String username, String password) {
 		Objects.requireNonNull(username);
 		Objects.requireNonNull(password);
