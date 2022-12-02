@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.nagarro.auth.AuthEntryPoint;
 import com.nagarro.filter.TokenAuthRequestFilter;
@@ -48,8 +49,11 @@ public class AuthSecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity, @Autowired AuthEntryPoint authEntryPoint,
 			@Autowired TokenAuthRequestFilter tokenAuthRequestFilter) throws Exception {
 		httpSecurity
+		//.csrf()
+		//.disable()
 		.csrf()
-		.disable()
+		.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+		.and()
 		.authorizeRequests()
 		.anyRequest()
 		.authenticated()
