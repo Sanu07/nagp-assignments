@@ -48,7 +48,7 @@ public class AuthController {
 
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> getUsers() {
-		return ResponseEntity.ok(List.of(new User()));
+		return ResponseEntity.ok(userDetailsService.getUsers());
 	}
 
 	@PostMapping("/authenticate")

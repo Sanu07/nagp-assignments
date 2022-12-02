@@ -1,6 +1,7 @@
 package com.nagarro.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public User save(User user) {
 		user.setPassword(bcryptEncoder.encode(user.getPassword()));
 		return userDao.save(user);
+	}
+
+	@Override
+	public List<User> getUsers() {
+		return userDao.findAll();
 	}
 
 }
