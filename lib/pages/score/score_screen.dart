@@ -21,17 +21,39 @@ class ScoreScreen extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .headline3
-                    ?.copyWith(color: Colors.blueAccent),
+                    ?.copyWith(color: Colors.white70),
               ),
               Spacer(),
               Text(
-                "${_qnController.correctAns * 10}/${_qnController.questions.length * 10}",
+                "${(_qnController.correctAns * 1) - (_qnController.questions.length - _qnController.correctAns) * 0.25}",
                 style: Theme.of(context)
                     .textTheme
                     .headline4
-                    ?.copyWith(color: Colors.blueAccent),
+                    ?.copyWith(color: Colors.white70),
               ),
               Spacer(flex: 3),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                child: Card(
+                  child: ListTile(
+                    title: Text('${_qnController.correctAns}'),
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/correct.png'),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                child: Card(
+                  child: ListTile(
+                    title: Text('${_qnController.questions.length - _qnController.correctAns}'),
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/incorrect.png'),
+                    ),
+                  ),
+                ),
+              ),
             ],
           )
         ],

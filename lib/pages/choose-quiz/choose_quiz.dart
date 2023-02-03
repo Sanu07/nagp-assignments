@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nagp_quiz_app/models/quizzes.dart';
+import 'package:nagp_quiz_app/pages/quiz/quiz_screen.dart';
 
 class ChooseQuiz extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _ChooseQuizState extends State<ChooseQuiz> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
-        title: Text('Choose a Location'),
+        title: Text('Choose a Topic'),
         centerTitle: true,
         elevation: 0,
       ),
@@ -33,7 +34,14 @@ class _ChooseQuizState extends State<ChooseQuiz> {
             child: Card(
               child: ListTile(
                 onTap: () {
-                  //
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return QuizScreen();
+                      },
+                    ),
+                  );
                 },
                 title: Text(quizzes[index].name),
                 leading: CircleAvatar(

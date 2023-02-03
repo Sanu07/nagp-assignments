@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nagp_quiz_app/pages/quiz/quiz_screen.dart';
+
+import '../choose-quiz/choose_quiz.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -83,7 +86,16 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ChooseQuiz();
+                              },
+                            ),
+                          );
+                        },
                         child: const Text('QUIZ'),
                       ),
                       ElevatedButton(

@@ -50,14 +50,11 @@ class QuestionController extends GetxController
         update();
       });
 
-    // start our animation
-    // Once 60s is completed go to the next qn
     _animationController.forward().whenComplete(nextQuestion);
     _pageController = PageController();
     super.onInit();
   }
 
-  // // called just before the Controller is deleted from memory
   @override
   void onClose() {
     super.onClose();
@@ -66,18 +63,15 @@ class QuestionController extends GetxController
   }
 
   void checkAns(Question question, int selectedIndex) {
-    // because once user press any option then it will run
     _isAnswered = true;
     _correctAns = question.answer;
     _selectedAns = selectedIndex;
 
     if (_correctAns == _selectedAns) _numOfCorrectAns++;
 
-    // It will stop the counter
     _animationController.stop();
     update();
 
-    // Once user select an ans after 3s it will go to the next qn
     Future.delayed(Duration(seconds: 3), () {
       nextQuestion();
     });
@@ -89,14 +83,10 @@ class QuestionController extends GetxController
       _pageController.nextPage(
           duration: Duration(milliseconds: 250), curve: Curves.ease);
 
-      // Reset the counter
       _animationController.reset();
 
-      // Then start it again
-      // Once timer is finish go to the next qn
       _animationController.forward().whenComplete(nextQuestion);
     } else {
-      // Get package provide us simple way to naviigate another page
       Get.to(ScoreScreen());
     }
   }
