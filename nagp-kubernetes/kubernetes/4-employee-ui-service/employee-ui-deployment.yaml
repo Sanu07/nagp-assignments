@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: employee-ui-service
+    version: v1
+  name: employee-ui-service
+  namespace: nagp-k8s #using namespace to respect seperate of concerns by deploying connected services in a particular namespace
+spec:
+  replicas: 3
+  minReadySeconds: 45
+  selector:
+    matchLabels:
+      app: employee-ui-service
+      version: v1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: employee-ui-service
+        version: v1
+    spec:
+      containers:
+      - image: sanu07/employee-dashboard:0.0.1
+        imagePullPolicy: IfNotPresent
+        name: employee-ui-service
+        env:
+          - name: EMPLOYEE_SERVICE_URI
+            value: http://employee-backend-service # employee-backend-service wil be available due to kubernetes inbuilt service discovery mechanism
+        ports:
+        - name: ui-service-port
+          containerPort: 8000
+        resources: #configure for optimum use of resources
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1024Mi
+        readinessProbe:
+          httpGet:
+            path: /health #readinessProbe will check app health before starting accepting request
+            port: ui-service-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /health #livenessProbe will confirm the health of the service is up and running
+            port: ui-service-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30 #helps in graceful termination

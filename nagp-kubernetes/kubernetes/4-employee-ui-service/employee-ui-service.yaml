@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels: #PODS
+    app: employee-ui-service
+  name: employee-ui-service
+  namespace: nagp-k8s
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: employee-ui-service
+    version: v1
+  type: LoadBalancer #use loadbalancer so that it can be accessed from outside the cluster

@@ -1,0 +1,54 @@
+# 'Deployment' configuration for mysql server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    tier: database
+  namespace: nagp-k8s
+spec:
+  selector: # mysql Pod Should contain same labels
+    matchLabels:
+      app: mysql
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: # should match 'Service' and 'Deployment' selectors
+        app: mysql
+        tier: database
+    spec:
+      containers:
+        - image: mysql:5.7 # image from docker-hub
+          args:
+            - "--ignore-db-dir=lost+found" # https://github.com/docker-library/mysql/issues/186
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom :
+                secretKeyRef :
+                  name : mysql-secrets #YAML file already declared
+                  key :  password
+
+            - name: MYSQL_DATABASE # Setting Database Name from a 'ConfigMap'
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config # YAML file already declared
+                  key :  dbName
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql #This is the path in the container on which the mounting will take place.
+            - name: mysql-initdb
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-persistent-storage # Obtaining 'vloume' from PVC
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+        - name: mysql-initdb #helps in initializing data
+          configMap:
+            name: db-config

@@ -1,0 +1,15 @@
+# 'Persistent Voulume Claim'(PVC) definition for Mysql Storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim # name of PVC for identifying the storage data
+  labels:
+    app: mysql
+    tier: database
+  namespace: nagp-k8s
+spec:
+  accessModes:
+    - ReadWriteOnce #This specifies the mode of the claim
+  resources:
+    requests:
+      storage: 100Mi #we need to store only 6 records, hence 100Mi will be fine

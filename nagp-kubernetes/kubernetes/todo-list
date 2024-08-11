@@ -1,0 +1,12 @@
+todo-list
+===================
+add ReadMe -- XX
+add resiliency -- done
+create a proper secret for mysql db -- done
+add seperate namespace -- done
+DBName is still mentioned as root hardcode -- done
+change imagepull policy to IfNotPresent -- done
+add readinessprobe and liveness probe -- done
+springboot redirect from / to employees page -- done
+create IAM role
+change name of 3 services -- done

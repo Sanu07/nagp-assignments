@@ -1,0 +1,13 @@
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind
+metadata: # Metadata of the resource
+  name: harness-demo
+  namespace: dev6 # namespace
+spec:
+  selector:
+    app: harness-demo
+  ports:
+    - protocol: TCP
+      port: 8080 # employee-service port
+      targetPort: 8080 # employee-service exposed at this port for other services inside the cluster
+  type: ClusterIP # using clusterIP so as to get the provision for internal load balancing

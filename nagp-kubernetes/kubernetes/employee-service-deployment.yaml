@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-service-mysql
+spec:
+  selector:
+    matchLabels:
+      app: employee-service-mysql
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: employee-service-mysql
+    spec:
+      containers:
+        - name: employee-service
+          image: sanu07/employee-service:0.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config
+                  key :  host
+
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config
+                  key :  dbName
+
+            - name: DB_USERNAME  # Setting Database username from Secret
+              value: root
+
+            - name: DB_PASSWORD # Setting Database password from Secret
+              valueFrom :
+                secretKeyRef :
+                  name : mysql-secrets
+                  key :  password
+
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: employee-service-mysql
+spec:
+  selector:
+    app: employee-service-mysql
+  ports:
+    - protocol: TCP
+      port: 9000 # The port that the service is running on in the cluster
+      targetPort: 9000 # The port exposed by the service
+  type: NodePort # type of the service.
+

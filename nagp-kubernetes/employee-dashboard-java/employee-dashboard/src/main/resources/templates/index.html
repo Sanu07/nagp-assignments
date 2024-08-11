@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>NAGP-Kubernetes-Assignment</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+
+<body>
+	<div class="container" th:if="${error}">
+		<div class="card m-4">
+			<div class="card-header">
+				<strong>OOPS!!!</strong>
+			</div>
+			<div class="card-body">
+				<div th:text="${errorMessage}"></div>
+			</div>
+		</div>
+	</div>
+	<div class="container" th:unless="${error}">
+		<div class="card m-4">
+			<div class="card-header">
+				<h5>Employee Details</h5>
+			</div>
+			<div class="card-body">
+				<table class="table table-striped table-sm">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Employee Id</th>
+							<th scope="col">Name</th>
+							<th scope="col">Organisation</th>
+							<th scope="col">Designation</th>
+							<th scope="col">Joining Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="employee : ${employeesList}">
+							<td th:text="${employee.id}"></td>
+							<td th:text="${employee.name}"></td>
+							<td th:text="${employee.organisation}"></td>
+							<td th:text="${employee.designation}"></td>
+							<td th:text="${employee.joiningDate}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="container" th:unless="${error}">
+		<div class="card m-4">
+			<div class="card-header">
+				<strong>Kubernetes POD Details</strong>
+			</div>
+			<div class="card-body">
+				<div>
+					<span th:if="${#maps.isEmpty(hostEnvVariablesMap)}">configured host environment variable names do not match with
+						any actual host environment variables</span>
+				</div>
+				<div class="row justify-content-around">
+					<div class="col-md-5 alert alert-primary" th:if="${#maps.containsKey(hostEnvVariablesMap, 'HOSTNAME')}">
+						POD name: <b><span th:text="${hostEnvVariablesMap['HOSTNAME']}"></span></b>
+					</div>
+					<div class="col-md-5 alert alert-primary" th:if="${#maps.containsKey(hostEnvVariablesMap, 'EMPLOYEE_SERVICE_URI')}">
+						ui communicates with backend using service names(Cluster DNS): <b><span th:text="${hostEnvVariablesMap['EMPLOYEE_SERVICE_URI']}"></span></b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

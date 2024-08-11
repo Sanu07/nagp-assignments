@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-backend-service
+  namespace: nagp-k8s # to deploy all service related to nagp assignment in a seperate namespace
+spec:
+  selector:
+    matchLabels:
+      app: employee-backend-service
+  replicas: 4
+  minReadySeconds: 45
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: employee-backend-service
+    spec:
+      containers:
+      - name: employee-service
+        image: sanu07/employee-service:0.0.1
+        imagePullPolicy: IfNotPresent
+        env:   # Setting Enviornmental Variables
+        - name: DB_HOST   # Setting Database host address from configMap
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key:  host
+
+        - name: DB_NAME  # Setting Database name from configMap
+          valueFrom:
+            configMapKeyRef :
+              name: db-config
+              key:  dbName
+
+        - name: DB_USERNAME  # Setting Database username from Secret
+          valueFrom :
+            secretKeyRef :
+              name : mysql-secrets
+              key :  username
+
+        - name: DB_PASSWORD # Setting Database password from Secret
+          valueFrom :
+            secretKeyRef :
+              name : mysql-secrets
+              key :  password
+        ports:
+        - name: backend-port
+          containerPort: 9000 #backend service runs on port 9000
+        resources: #configure for optimum use of resources
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1024Mi
+        readinessProbe:
+          httpGet:
+            path: /employees/health #readinessProbe will confirm the health of the service before starting accepting any request
+            port: backend-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /employees/health #livenessProbe will confirm app is up and running
+            port: backend-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30 #helps in graceful termination

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: employee-dashboard
+    version: v1
+  name: employee-dashboard
+  namespace: default
+spec:
+  replicas: 2
+  minReadySeconds: 45
+  selector:
+    matchLabels:
+      app: employee-dashboard
+      version: v1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: employee-dashboard
+        version: v1
+    spec:
+      containers:
+      - image: sanu07/employee-dashboard:0.0.1
+        imagePullPolicy: Always
+        name: employee-dashboard
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels: #PODS
+    app: employee-dashboard
+  name: employee-dashboard
+  namespace: default
+spec:
+  ports:
+  - nodePort: 30702
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: employee-dashboard
+    version: v1
+  sessionAffinity: None
+  type: LoadBalancer

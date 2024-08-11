@@ -1,0 +1,25 @@
+apiVersion : v1
+kind : ConfigMap
+metadata:
+  name : db-config
+  namespace: nagp-k8s
+data:
+  host : mysql
+  dbName: employee_db
+  initdb.sql: |
+    CREATE TABLE IF NOT EXISTS employee_db.employee_details (
+        id bigint not null auto_increment,
+        emp_designation varchar(255),
+        emp_id varchar(255),
+        emp_joining_date date,
+        emp_name varchar(255),
+        emp_organisation varchar(255),
+        primary key (id),
+        unique (emp_id)
+    );
+    INSERT INTO employee_db.employee_details (emp_designation, emp_id, emp_joining_date, emp_name, emp_organisation) VALUES ('Associate Staff Engineer', 'EMP11111', '2022-02-10', 'Albert', 'Nagarro');
+    INSERT INTO employee_db.employee_details (emp_designation, emp_id, emp_joining_date, emp_name, emp_organisation) VALUES ('Staff Engineer', 'EMP22222', '2022-02-01', 'Bradd', 'Cognizant');
+    INSERT INTO employee_db.employee_details (emp_designation, emp_id, emp_joining_date, emp_name, emp_organisation) VALUES ('Associate Staff Engineer', 'EMP33333', '2022-02-02', 'Charles', 'TCS');
+    INSERT INTO employee_db.employee_details (emp_designation, emp_id, emp_joining_date, emp_name, emp_organisation) VALUES ('Staff Engineer', 'EMP44444', '2022-02-03', 'Darren', 'Nagarro');
+    INSERT INTO employee_db.employee_details (emp_designation, emp_id, emp_joining_date, emp_name, emp_organisation) VALUES ('Principal Engineer', 'EMP55555', '2022-02-10', 'Elizabeth', 'CTS');
+    INSERT INTO employee_db.employee_details (emp_designation, emp_id, emp_joining_date, emp_name, emp_organisation) VALUES ('Staff Engineer', 'EMP66666', '2022-02-10', 'Foden', 'Google');

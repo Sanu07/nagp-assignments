@@ -1,0 +1,13 @@
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind
+metadata: # Metadata of the resource
+  name: employee-backend-service
+  namespace: nagp-k8s # namespace
+spec:
+  selector:
+    app: employee-backend-service
+  ports:
+    - protocol: TCP
+      port: 9000 # employee-service port
+      targetPort: 9000 # employee-service exposed at this port for other services inside the cluster
+  type: ClusterIP # using clusterIP so as to get the provision for internal load balancing

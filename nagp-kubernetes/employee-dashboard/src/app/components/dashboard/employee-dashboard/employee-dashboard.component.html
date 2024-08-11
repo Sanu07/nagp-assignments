@@ -1,0 +1,37 @@
+<p>{{employees | json}}</p>
+<div class="container">
+  <h1>Install Bootstrap 5 in Angular 12 - ItSolutionStuff.com</h1>
+
+  <div class="card">
+    <div class="card-header">
+      Featured
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Special title treatment</h5>
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Employee Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Organisation</th>
+        <th scope="col">Designation</th>
+        <th scope="col">Joining Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of employees; index as i; trackBy: trackByFn">
+        <th scope="row">{{employee.employeeId}}</th>
+        <td>{{employee.name}}</td>
+        <td>{{employee.organisation}}</td>
+        <td>{{employee.designation}}</td>
+        <td>{{employee.joiningDate}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

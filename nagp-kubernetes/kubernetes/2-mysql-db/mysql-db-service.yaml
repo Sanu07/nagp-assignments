@@ -1,0 +1,18 @@
+# mysql service to be exposed to other services
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql  # DNS name
+  namespace: nagp-k8s
+  labels:
+    app: mysql
+    tier: database
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
+    tier: database
+  clusterIP: None  # We are using DNS, Thus ClusterIP is not relevant. Moreover we are using only 1 pod
+                   # so no need for Loadbalancing through clusterIP
