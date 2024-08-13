@@ -1,0 +1,9 @@
+environment:
+name: harness-demo
+identifier: harness-demo
+description: ""
+tags: {}
+type: PreProduction
+orgIdentifier: local
+projectIdentifier: local_project
+variables: []
