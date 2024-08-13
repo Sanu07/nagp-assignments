@@ -1,24 +1,24 @@
 pipeline:
-  name: ownapp_rolling_pipeline
-  identifier: ownapp_rolling_pipeline
+  name: harness_demo_rolling_pipeline
+  identifier: harness_demo_rolling_pipeline
   projectIdentifier: default_project
   orgIdentifier: default
   tags: {}
   stages:
     - stage:
-        name: deploy-ownapp
-        identifier: deployownapp
+        name: deploy-harness-demo
+        identifier: deployharnessdemo
         description: ""
         type: Deployment
         spec:
           deploymentType: Kubernetes
           service:
-            serviceRef: ownappservice
+            serviceRef: harnessdemo
           environment:
-            environmentRef: ownappdevenv
+            environmentRef: harnessdevenv
             deployToAll: false
             infrastructureDefinitions:
-              - identifier: ownappk8sinfra
+              - identifier: harnessdemok8sinfra
           execution:
             steps:
               - step:

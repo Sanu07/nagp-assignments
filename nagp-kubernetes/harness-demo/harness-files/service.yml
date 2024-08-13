@@ -1,21 +1,24 @@
 service:
-    name: ownapp_service
-    identifier: ownappservice
+    name: harness_demo
+    identifier: harnessdemo
     serviceDefinition:
         type: Kubernetes
         spec:
             manifests:
                 - manifest:
-                    identifier: ownapp
-                    type: K8sManifest
-                    spec:
-                    store:
-                        type: Github
-                        spec:
-                            connectorRef: ownappgitconnector
-                            gitFetchType: Branch
-                            paths:
-                                - deploy/kubernetes/complete-demo.yaml
-                            branch: master
-                        skipResourceVersioning: false
-                        enableDeclarativeRollback: false
+                      identifier: harnessdemo
+                      type: K8sManifest
+                      spec:
+                          store:
+                              type: Github
+                              spec:
+                                  connectorRef: harnessdemogitconnector
+                                  gitFetchType: Branch
+                                  paths:
+                                      - kubernetes/2-harness-demo/harness-demo-deployment.yaml
+                                      - kubernetes/2-harness-demo/harness-demo-service.yaml
+                                  repoName: demo-poc
+                                  branch: main
+                              skipResourceVersioning: false
+                              enableDeclarativeRollback: false
+    gitOpsEnabled: false
