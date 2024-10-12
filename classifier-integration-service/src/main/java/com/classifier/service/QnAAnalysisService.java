@@ -3,8 +3,10 @@ package com.classifier.service;
 import com.classifier.constants.Constants;
 import com.classifier.dao.InterviewRepository;
 import com.classifier.dao.InterviewResultRepository;
+import com.classifier.dao.QuestionRepository;
 import com.classifier.entity.Interview;
 import com.classifier.entity.InterviewResult;
+import com.classifier.entity.Question;
 import com.classifier.model.AIResponse;
 import com.classifier.model.AnalyseRequest;
 import com.classifier.model.AnalyseResponse;
@@ -15,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,6 +36,9 @@ public class QnAAnalysisService {
 
     @Autowired
     private InterviewRepository interviewRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     public AnalyseResponse getAnalyseResponse(AnalyseRequest analyseRequest) {
         GeminiAnalyseRequest geminiAnalyseRequest = new GeminiAnalyseRequest();
@@ -57,8 +64,22 @@ public class QnAAnalysisService {
                     .experience(geminiAnalyseRequest.getExperience())
                     .name(interview.getInterviewee())
                     .interviewComplexity(analyseResponse.getAnalysis().getInterviewComplexity())
-                    .overall(mapper.valueToTree(analyseResponse.getAnalysis().getOverall()))
+                    .overall(mapper.writeValueAsString(analyseResponse.getAnalysis().getOverall()))
                     .build());
+
+            List<Question> questionList = analyseRequest.getQuestionAndAnswers().stream()
+                    .map(request -> Question.builder()
+                            .createdTs(OffsetDateTime.now())
+                            .llmTechnology(request.getLlmTechnology())
+                            .llmDifficulty(request.getLlmDifficulty())
+                            .technology(request.getSelectedTechnology())
+                            .difficulty(request.getSelectedDifficulty())
+                            .questionText(request.getQuestion())
+                            .modelVersion("v1")
+                            .interviewId(interview.getId())
+                            .build()).collect(Collectors.toList());
+
+            questionRepository.saveAll(questionList);
             return analyseResponse;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

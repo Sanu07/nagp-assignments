@@ -66,7 +66,7 @@ public class TextSanitizationService {
         // save in database
         scoreRepository.save(Score.builder()
                 .interviewId(savedInterview.getId())
-                .score(mapper.valueToTree(scores)).build());
+                .score(mapper.writeValueAsString(scores)).build());
 
         // get the conversation Text
         // Sanu Ghosh: what is java class?

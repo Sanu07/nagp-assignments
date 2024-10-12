@@ -21,6 +21,5 @@ public class Score {
     private Long id;
     @Column(name = "interview_id")
     private Long interviewId;
-    @Column(columnDefinition = "json")
-    private JsonNode score;
+    private String score;
 }

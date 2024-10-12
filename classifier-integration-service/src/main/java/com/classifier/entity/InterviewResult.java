@@ -25,7 +25,5 @@ public class InterviewResult {
 
     private String experience;
 
-    // Store as a JSON object in MySQL
-    @Column(columnDefinition = "json")
-    private JsonNode overall;  // Using JsonNode from Jackson to map JSON data
+    private String overall;
 }
