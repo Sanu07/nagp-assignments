@@ -1,0 +1,23 @@
+CREATE TABLE interview_result (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255),
+  interview_complexity INT,
+  experience VARCHAR(255),
+  overall JSON
+);
+
+CREATE TABLE score (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    interview_id VARCHAR(255) NOT NULL,
+    score JSON
+);
+
+CREATE TABLE interviews (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    interviewer VARCHAR(255) NOT NULL,
+    interviewee VARCHAR(255) NOT NULL,
+    genus VARCHAR(50),
+    years_of_experience INT,
+    created_ts DATETIME NOT NULL
+);
+
