@@ -24,6 +24,8 @@ public class AnalyseResponse {
     public static class Analysis {
         private Integer interviewComplexity;
         private Map<String, Integer> overall;
+        private List<String> positiveFeedback;
+        private List<String> areasOfImprovement;
     }
 
     @NoArgsConstructor

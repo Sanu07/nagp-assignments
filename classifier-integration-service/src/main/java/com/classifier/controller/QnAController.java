@@ -1,6 +1,6 @@
 package com.classifier.controller;
 
-import com.classifier.constants.Constants;
+import com.classifier.entity.Score;
 import com.classifier.model.*;
 import com.classifier.service.CompareAndRankService;
 import com.classifier.service.GeminiService;
@@ -101,15 +101,15 @@ public class QnAController {
 
     @PostMapping("/compareAndRank")
     public ResponseEntity<ComparedResult> compareAndRankCandidates(
-            @RequestParam("jobDescription") String jobDescription,
-            @RequestParam("candidates") String candidatesJson
+            @RequestBody CompareAndRankInputRequest compareAndRankInputRequest
     ) {
         try {
-            List<String> candidates = new ObjectMapper().readValue(candidatesJson, new TypeReference<>() {
-            });
-            ComparedResult comparedResult = compareAndRankService.compareAndRank(jobDescription, candidates);
+//            List<String> candidates = new ObjectMapper().readValue(compareAndRankInputRequest.getCandidates(), new TypeReference<>() {
+//            });
+            ComparedResult comparedResult = compareAndRankService.compareAndRank(compareAndRankInputRequest.getJobDescription(),
+                    compareAndRankInputRequest.getCandidates());
             return ResponseEntity.ok(comparedResult);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -154,5 +154,10 @@ public class QnAController {
 //        // Handle the file and candidates list as required
 //        return ResponseEntity.ok(comparedResult);
 
+    }
+
+    @PostMapping("scores")
+    public Score getInterviewerScores(@RequestParam Long interviewId) {
+        return qnAAnalysisService.getInterviewerScores(interviewId);
     }
 }

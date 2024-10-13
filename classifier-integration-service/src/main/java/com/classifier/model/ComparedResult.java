@@ -26,6 +26,7 @@ public class ComparedResult {
         private List<String> mandatorySkills;
         private List<String> goodToHave;
         private Map<String, Integer> weightage;
+        private String jobDescription;
     }
 
     @NoArgsConstructor
@@ -35,6 +36,16 @@ public class ComparedResult {
     public static class Result {
         private String name;
         private Integer rank;
-        private List<String> feedbacks;
+        private List<String> feedback;
+        private Weightage weightage;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Weightage {
+        private String calculation;
+        private List<String> explanation;
     }
 }

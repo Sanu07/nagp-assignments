@@ -28,7 +28,6 @@ public class GeminiService {
 
     public AIResponse getAIResponse(String prompt, String input) {
         String apiUrl = String.format(API_URL_TEMPLATE, geminiKey);
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
 

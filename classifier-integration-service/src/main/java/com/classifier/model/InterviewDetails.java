@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class InterviewDetails {
+    private String interviewId;
     private String interviewer;
     private String interviewee;
     private List<QnA> conversations;

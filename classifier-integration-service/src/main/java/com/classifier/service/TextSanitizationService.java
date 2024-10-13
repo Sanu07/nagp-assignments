@@ -77,6 +77,7 @@ public class TextSanitizationService {
 
         //call the predict endpoint in LLM to get difficulty, technology and suggested questions
         InterviewDetails questionTags = getQuestionTags(interviewDetails);
+        questionTags.setInterviewId(String.valueOf(savedInterview.getId()));
 
         savedInterview.setInterviewer(questionTags.getInterviewer());
         savedInterview.setInterviewee(questionTags.getInterviewee());
@@ -103,8 +104,10 @@ public class TextSanitizationService {
         interviewDetailsResponse.setInterviewee(interviewDetails.getInterviewee());
         List<InterviewDetails.QnA> qnAList = new ArrayList<>();
         for (int i = 0; i < llmResponse.size(); i++) {
-            InterviewDetails.QnA qnA = llmResponse.get(i);
-            qnA.setAnswer(interviewDetails.getConversations().get(i).getAnswer());
+            InterviewDetails.QnA qnA = interviewDetails.getConversations().get(i);
+            qnA.setSuggestedQuestions(llmResponse.get(i).getSuggestedQuestions());
+            qnA.setTechnology(llmResponse.get(i).getTechnology());
+            qnA.setDifficulty(llmResponse.get(i).getDifficulty());
             qnAList.add(qnA);
         }
         interviewDetailsResponse.setConversations(qnAList);
@@ -151,7 +154,7 @@ public class TextSanitizationService {
 
     private String formatConversations(String jsonString) {
         JSONObject jsonObject = new JSONObject(jsonString);
-        String jsonConversationString = jsonObject.getString("conversation");
+        String jsonConversationString = jsonObject.getString("conversations");
 
         // Initialize StringBuilder to construct the final text
         StringBuilder result = new StringBuilder();
