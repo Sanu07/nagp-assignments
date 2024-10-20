@@ -4,7 +4,7 @@ public interface Constants {
 
     String PROMPT_SANITIZE_TEXT = """
             # Consider yourself as a text sanitization model
-                        \s
+                        
              ## Given a text, in the form of <speaker>: <conversation>, you need to sanitize the text following the below rules
             
              1. Find the interviewee and interviewer name from the complete context.
@@ -27,24 +27,24 @@ public interface Constants {
                  user1: Correct. How many types are there?
                  user2: there are 4 types
                  user1: What are the different design patterns used in Java?
-                 user2: I've worked on creational design patterns that are concerned with how to create objects. Not sure about the\s
+                 user2: I've worked on creational design patterns that are concerned with how to create objects. Not sure about the
                              other types of patterns.
                  user1: Anything on Structural and Behavioral design patterns?
-                 user2:  yes, Structural design patterns focus on the composition of classes or objects to form larger, more complex\s
-                              structures. And Behavioral design patterns deal with the communication and interaction between objects and\s
+                 user2:  yes, Structural design patterns focus on the composition of classes or objects to form larger, more complex
+                              structures. And Behavioral design patterns deal with the communication and interaction between objects and
                               classes
-                \s
+                
                  **Output**
                  user1: What is Garbage Collection?how many types are there?
                  user2: Garbage collection is process of cleaning java memory. there are 4 types.
                  user1: What are the different design patterns used in Java?
-                 user2:  I've worked on creational design patterns that are concerned with how to create objects. Not sure about the\s
+                 user2:  I've worked on creational design patterns that are concerned with how to create objects. Not sure about the
                              other types of patterns.
                  user1: Anything on Structural and Behavioral design patterns?
-                 user2:  yes, Structural design patterns focus on the composition of classes or objects to form larger, more complex\s
-                              structures. And Behavioral design patterns deal with the communication and interaction between objects and\s
+                 user2:  yes, Structural design patterns focus on the composition of classes or objects to form larger, more complex
+                              structures. And Behavioral design patterns deal with the communication and interaction between objects and
                               classes.
-                \s
+                
                  *Provide the final output in the below JSON format. It should provide the interviewer name and interviewee name along with list of questions and answers after sanitizing it based on the above rules.* **NO PREAMBLE**
                  {
                      "interviewer": "<name>",
@@ -60,7 +60,7 @@ public interface Constants {
 
     String PROMPT_INDIVIDUAL_REPORT_ANALYSIS = """
             # Consider yourself as a Java Microservice Interview Evaluation model
-                        \s
+                        
              ## Given a list of questions and answers on the below *Interview Topics* and *Input Format*, you need to provide score and feedback following the *Set of Rules*
             
              ### Interview Topics
@@ -99,7 +99,7 @@ public interface Constants {
              4. Provide the output in the below JSON *Output format* for every set of question and answer in the same order. Please follow below guidelines for the final output
             
              5. Avoid addressing the candidate directly. Instead, refer to the candidate in the third person to maintain a professional tone suited for panel review.
-                        \s
+                        
                  a. *evaluation* contains marks and feedback for every set of question and answer in the same order
             
                  b. *analysis* contains a separate JSON object.
@@ -107,7 +107,7 @@ public interface Constants {
                  - "overall" is a key-value pair where each interview topic gets an overall score based on the questions asked and their complexity. If no questions were asked on a particular topic, leave it as empty.
                  - "positiveFeedback" indicates a list of major strengths shown by the candidate.
                  - "negativeFeedback" highlights the major areas for improvement.
-                        \s
+                        
              **Output Format**
              {
                  "evaluation": [
@@ -139,102 +139,97 @@ public interface Constants {
             """;
 
     String PROMPT_COMPARE_AND_RANK_CANDIDATES = """
-            # consider yourself as an interviewer analyst
-              ## your job is to compare multiple JSON Input responses that contains the
-              evaluated results on 5 different topics and rank the candidates based on their performance following the below
-              *mentioned Guidelines* and the *job description provided*
-              \s
-              **Topics**
-              1. microservice
-              2. devops
-              3. java
-              4. springboot
-              5. database
-              \s
-              ## Guidelines to rank the candidates
-              1. consider the overall average score in each topic and also *consider interview   complexity* for evaluation.
-              2. Read the complete Job description first and analyse the requirements of
-              technologies   and experience. Based on your analysis assign weightage to the technologies and also to experience.
-              3. Now based on   your assigned weightage to technologies and experience, evaluate and rank the candidates on their experience and  overall score obtained for individual technologies.
-              4. Give an in-depth feedback in *LIST* format on why the particular candidate is chosen over other candidates. The feedback should be solely based on overall score obtained and experience
-              5. Interview complexity 1 being the lowest and 5 being the highest, rank candidates accordingly.
-              6. Give less preference to experience for rank calculation if a candidate with low experience is able to do well in higher complexity interview.
-              7.Experience if a year less than the required experience, candidate can be considered for the position.
-              8. Provide an output in given JSON
-               \s
+              # Consider Yourself an Interview Analyst
+            
+              ## Task Overview
+              Your task is to compare multiple JSON input responses that contain evaluated results across various technologies. Based on this evaluation, you will rank the candidates in ascending order according to their performance, interview complexity, and experience, following the guidelines and job description provided below.
+            
+              ## Guidelines for Ranking Candidates
+            
+              1. **Weightage Allocation**:
+                 - Assign 5%% weightage to experience.
+                 - Distribute the remaining 95%% between mandatory and good-to-have skills, ensuring that mandatory skills receive a higher weightage than good-to-have skills.
+              2. **Job Description Analysis**: Thoroughly analyze the job description to identify required technologies and experience. Assign weightage to each mandatory skill based on its importance as derived from the job description.
+              3. **Weighted Average Calculation**: Calculate the weighted average percentage using the assigned weightage for technologies and experience, then rank the candidates according to their overall scores.
+              4. **Experience Scoring**:
+                 - If the required experience states `X`, a candidate with exactly X years of experience should receive the full 5 points.
+                 - For candidates with 2 or 4 years of experience, assign 4 points, and so on.
+                 - For experience below `X`, assign a score of 0.
+                 - If the required experience states `<X>+`, give the maximum score to candidates with experience ranging from `X` to `X+3`, deducting 1 point for each additional year beyond `X+3`, without allowing negative scores.
+              5. **In-depth Feedback**: Provide comprehensive feedback in a list format explaining why a particular candidate was selected over others. This feedback should be based solely on the overall score and the candidate's experience.
+              6. **Interview Complexity**: Assess the interview complexity on a scale of 1 to 5, where 1 is the easiest and 5 is the most difficult. If a candidate with lower experience has a better score than another whose experience closely matches the requirements, the candidate with lower experience will receive a higher rank.
+              7. **Subtopics**: When evaluating technologies, consider subtopics as part of their parent topics. For example:
+                 - Under **Database**, evaluate both SQL and NoSQL.
+                 - Under **DevOps**, assess Docker and Kubernetes.
+                 - For **Python**, ensure candidates are scored based on their actual performance, rather than simply assigning a maximum score.
+              8. **Zero Scores**: Evaluate each required technology in the output. If a candidate scores zero in any required or preferred skill, record that score as 0 for that technology.
+              9. **Weightage Assignment**: When assigning weightage, assign 0 for any technology that lacks an available score. Do not assume scores. Ensure that the total weightage sums to 100.
+              10. **Candidate Ranking Order**: Candidates should be ranked in ascending order of their rank, from top to bottom.
+              11. **Output Format**: Provide the output in the specified JSON format outlined in the *Output Format* section.
+              12. **No Assumptions**: Do not make any assumptions on your own. If you lack data, *DO NOT MAKE IT UP*.
+            
               ## Input JSON Format
-              {
-                "name": "<name of the candidate>",
-                "interviewComplexity": "<number between 1 to 5, 1 as lowest>",
-                "experience": "<in years>",
-                "overall": {
-                  "microservice": "<number between 1 to 5, 1 as lowest>",
-                  "devops": "<number between 1 to 5, 1 as lowest>",
-                  "database": "<number between 1 to 5, 1 as lowest>",
-                  "java": "<number between 1 to 5, 1 as lowest>",
-                  "springboot": "<number between 1 to 5, 1 as lowest>"
-                }
-              }
             
-              \s
+              ```json
+              [
+                {
+                  "name": "<name of the candidate>",
+                  "interviewComplexity": "<number between 1 to 5, where 1 is the lowest>",
+                  "experience": "<in years>",
+                  "overall": {
+                    "<tech-1>": "<number between 1 to 5, where 1 is the lowest>",
+                    "<tech-2>": "<number between 1 to 5, where 1 is the lowest>"
+                  }
+                }
+              ]
+            ```
               ## Job Description
-              \s
               %s
-              \s
+          
               ## Output Format
-              1. Output format will have jobAnalysis key in the json which will have summary of the job descripion with fields like experience which is a string and have the experience in the range from 0-40.
-              2. jobAnalysis will also have key manadatorySkills with array of strings containing the required skills necessary for the job and key. mandatory skills will be summarised from the job description in the system prompt. remove unnecessary details from the mandatory skills and just list the technical topics from here. goodToHave will have skills which are optional but plus point for the job.
-              3. jobAnalysis will have key weightage deduced from the mandatory skills and good to have
-              4. results key will have the json array with each json for candidate with fields like name, rank, feedback, weightage. name key will have candidate's name, rank will be the candidate rank based on the guidelines for the rank calculation, feedback will have array of strings having the candidate's feedback of the interview for different mandatory and optional skills, weightage object will have calculation which will be having the calculation formula and the explanation will be having the explanation for the calculation.
-              5. jobDescription should be a brief analysis of the complete job description highlighting years of expereince and skills required
-              6. Return nothing besides json array
-            
-              Example\s
+              1. The output will include a jobAnalysis key in the JSON, summarizing the job description with fields like experience (a string representing the experience range from 0-40).
+              2. The jobAnalysis will also include mandatorySkills (an array of strings with the necessary skills for the job) and goodToHave (skills that are optional but beneficial).
+              3. The jobAnalysis will include a weightage key derived from the mandatory and good-to-have skills.
+              4. The results key will contain a JSON array for each candidate, with fields like name, rank, feedback, and weightage. The name key will include the candidate's name, while rank will indicate their ranking based on the guidelines. The feedback will provide detailed reasoning for the candidate's ranking based on overall score and experience. The weightage object will contain the calculation formula and an explanation for the calculation.
+              5. The jobDescription should offer a brief analysis of the complete job description, emphasizing the required years of experience and skills.
+              6. Return only the JSON array.
+          
+              ## Example
+              ```json
               {
-                "jobAnalysis": {
-                  "experience": 4,
-                  "jobDescription": "brief on the complete job description",
-                  "mandatorySkills": [
-                    "complete sentences"
-                  ],
-                  "goodToHave": [
-                    "complete sentences"
-                  ],
-              \s
-                  "weightage": {
-                    "microservice": 20,
-                    "devops": 20,
-                    "experience": 20
-                  }
-                },
-                "results": {
-                  {
-                   "name" : "C3",
-                   "weightage" : {
-                      "calculation" : "((4/5) * 20) + ((5/5) * 20) + ((3/5) * 20) + 20 + (0 * 10) + (0 * 10) = 88",
-                      "explanation" : [
-                                 "Java and database skills are not rated, so their contribution is zero in this calculation"]
+                 "jobAnalysis": {
+                   "experience": "<experience required. If it requires 3+, then output as 3+>",
+                   "jobDescription": "Brief overview of the complete job description.",
+                   "mandatorySkills": [
+                     "<List of mandatory skills extracted from the job description>"
+                   ],
+                   "goodToHave": [
+                     "<List of optional skills extracted from the job description>"
+                   ],
+                   "weightage": {
+                     "<technology-1>": "<weightage value>",
+                     "<technology-2>": "<weightage value>",
+                     "<required experience>": "<weightage value>"
+                   }
+                 },
+                 "results": [
+                   {
+                     "name": "C3",
+                     "weightage": {
+                       "calculation": "<Calculate the weighted average percentage, showing the calculation in one line with the final score>",
+                       "explanation": [
+                         "Details on how the weighted average percentage for this candidate was calculated in 2 lines.",
+                         "- 1st line should show the detailed calculation.",
+                         "- 2nd line should provide a brief explanation."
+                       ]
                      },
-                    "rank": 3,
-                    "feedback": [
-                      "",
-                      ""
-                    ]
-                  },
-                  {
-                   "name" : "C2",
-                   "weightage" : {
-                      "calculation" : "((4/5) * 20) + ((5/5) * 20) + ((3/5) * 20) + 20 + (0 * 10) + (0 * 10) = 88",
-                      "explanation" : [
-                                 "Java and database skills are not rated, so their contribution is zero in this calculation"]
-                     },
-                    "rank": 1,
-                    "feedback": [
-                      "",
-                      ""
-                    ]
-                  }
-                }
-              }
+                     "rank": 1,
+                     "feedback": [
+                       "<Detailed explanation in **LIST FORMAT** of why this candidate was chosen for rank 1, and so on>"
+                     ]
+                   }
+                 ]
+               }
+              ```
             """;
 }

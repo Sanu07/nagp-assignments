@@ -7,12 +7,14 @@ import com.classifier.model.AIResponse;
 import com.classifier.model.CompareAndRankPromptInput;
 import com.classifier.model.ComparedResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +41,19 @@ public class CompareAndRankService {
                     .overall(jsonNode)
                     .build();
         }).toList();
+        Map<String, Map<String, Object>> nameOverallMap = compareAndRankPromptInputs.stream()
+                .collect(Collectors.toMap(
+                        CompareAndRankPromptInput::getName,
+                        e -> {
+                            try {
+                                Map<String, Object> map = mapper.readValue(e.getOverall().textValue(), Map.class);
+                                map.put("experience", e.getExperience());
+                                return map;
+                            } catch (JsonProcessingException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                ));
         String input;
         try {
             input = mapper.writeValueAsString(compareAndRankPromptInputs);
@@ -50,6 +65,9 @@ public class CompareAndRankService {
         text = text.replaceAll("```json", "").replace("```", "");
         try {
             ComparedResult comparedResult = mapper.readValue(text, ComparedResult.class);
+            comparedResult.getResults().forEach(result -> {
+                result.setOverall(nameOverallMap.get(result.getName()));
+            });
             return comparedResult;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
